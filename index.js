@@ -1,14 +1,4 @@
-/*
 
-This is how an item object should look like
-
-{
-  id: 1, // <- the item id matches the icon name in the assets/icons folder
-  name: "beetroot",
-  price: 0.35 // <- You can come up with your own prices
-}
-
-*/
 let state = {
   items: [
     {
@@ -132,25 +122,39 @@ function cartItem(item){
   let buttonEl = document.createElement("button");
   buttonEl.textContent = "-";
   buttonEl.addEventListener("click", function() {
-    --item.itemNumber;
+    item.itemNumber--;
+    numberOfItems.textContent = item.itemNumber;  
   })
   let numberOfItems = document.createElement("span");
   numberOfItems.textContent = item.itemNumber;
+  
+  if(item.itemNumber < 1) {
+    deleteItem();
+    render();
+  }
+
   let buttonEl2 = document.createElement("button");
   buttonEl2.textContent = "+";
   buttonEl2.addEventListener("click", function () {
-    ++item.itemNumber;
+    item.itemNumber++;
+    numberOfItems.textContent = item.itemNumber;
   });
+
+  
 
   liEl.append(imgEl,pEl, buttonEl, numberOfItems, buttonEl2);
   cartUl.append(liEl);
 }
+function totalPrice() {
+  let price = document.querySelector(".total-number");
 
+}
 
+console.log(state.items);
 
-
-
-
+function deleteItem(item) { 
+    item.remove(item);
+    }
 
 
 function render() { 
