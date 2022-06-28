@@ -6,74 +6,77 @@ let state = {
       name: "beetroot",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/001-beetroot.svg",
     },
     {
       id: 2,
       name: "carrot",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/002-carrot.svg",
     },
     {
       id: 3,
       name: "apple",
       price: 0.35,
-      itemNumber: 0,
-      image: "assets/icons/003-apple.svg",
+      itemNumber: 2,
     },
     {
       id: 4,
       name: "apricot",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/004-apricot.svg",
     },
     {
       id: 5,
       name: "avocado",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/005-avocado.svg",
     },
     {
       id: 6,
       name: "banana",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/006-bananas.svg",
     },
     {
       id: 7,
       name: "bell-pepper",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/007-bell-pepper.svg",
     },
     {
       id: 8,
       name: "berry",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/008-berry.svg"
     },
     {
       id: 9,
       name: "blueberry",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/009-blueberry.svg"
     },
     {
       id: 10,
       name: "eggplant",
       price: 0.35,
       itemNumber: 0,
-      image: "assets/icons/010-eggplant.svg"
     },
   ],
 };
 
+function getItemImagePath(item) {
+  let id = String(item.id).padStart(3, "0");
+  return `/assets/icons/${id}-${item.name}.svg`;
+}
+
+function increaseQuantity(item) {
+    return item.itemNumber++;
+}
+function decreaseQuantity(item) {
+  if (item.itemNumber > 0) {
+    item.itemNumber--;
+  }
+}
 
   function createItem(item) {
     let liEl = document.createElement("li");
@@ -82,7 +85,7 @@ let state = {
     let imgEl = document.createElement("img");
 
     
-      imgEl.src = item.image;
+      imgEl.src = getItemImagePath(item);
       imgEl.alt = item.name;
 
     divEl.appendChild(imgEl);
@@ -91,29 +94,34 @@ let state = {
     
     
     buttonEl.addEventListener("click", function() {
-        item.itemNumber++;
-        cartItem(item);
-
+        item.itemNumber++;      
+        render();
     })
 
     liEl.append(divEl, buttonEl);
 
     let storeUl = document.querySelector(".item-list.store--item-list");
     storeUl.append(liEl);
-    this.removeEventListener("click", createItem);
   }
-
-for(let item of state.items) {
+function getItems(){
+  return state.items.filter(item => item.itemNumber > 0);
+}
+for(let item of state.items){
   createItem(item);
+}
+
+for(let item of getItems()) {
+  cartItem(item);
 }
 
 function cartItem(item){
   let cartUl = document.querySelector(".item-list.cart--item-list");
+  cartUl.textContent = "";
   let liEl = document.createElement("li");
 
   let imgEl = document.createElement("img");
   imgEl.className = "cart--item-icon";
-  imgEl.src = item.image;
+  imgEl.src = getItemImagePath(item);
   imgEl.alt = item.name;
 
   let pEl = document.createElement("span");
@@ -123,7 +131,8 @@ function cartItem(item){
   buttonEl.textContent = "-";
   buttonEl.addEventListener("click", function() {
     item.itemNumber--;
-    numberOfItems.textContent = item.itemNumber;  
+    numberOfItems.textContent = item.itemNumber; 
+    render(); 
   })
   let numberOfItems = document.createElement("span");
   numberOfItems.textContent = item.itemNumber;
@@ -134,6 +143,7 @@ function cartItem(item){
   buttonEl2.addEventListener("click", function () {
     item.itemNumber++;
     numberOfItems.textContent = item.itemNumber;
+    render();
   });
 
   
@@ -141,6 +151,7 @@ function cartItem(item){
   liEl.append(imgEl,pEl, buttonEl, numberOfItems, buttonEl2);
   cartUl.append(liEl);
 }
+
 function getPrice(item) {
   return item.price;
 }
